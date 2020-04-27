@@ -1,0 +1,96 @@
+
+
+
+CREATE TABLE [dbo].[Doctor](
+       [Doc_cod] [int] primary key,
+       [Doc_Nom] [varchar](50) NULL,
+       [Doc_Esp] [varchar](50) NULL,
+       [Doc_CM] [varchar](50) NULL
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Locacion]    Script Date: 26/04/2020 21:03:26 ******/
+CREATE TABLE [dbo].[Locacion](
+       [Loc_Cod] [int] primary key,
+       [Loc_Des] [varchar](50) NULL,
+       [Loc_Dir] [varchar](50) NULL
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Medicamento]    Script Date: 26/04/2020 21:03:26 ******/
+CREATE TABLE [dbo].[Medicamento](
+       [Med_Cod] [varchar](20) primary key,
+       [Med_Nom] [varchar](50) NULL,
+       [Med_Lab] [varchar](50) NULL,
+       [Med_Fab] [varchar](50) NULL,
+       [Med_Ffab] [varchar](50) NULL
+) ON [PRIMARY]
+/****** Object:  Table [dbo].[Paciente]    Script Date: 26/04/2020 21:03:26 ******/
+CREATE TABLE [dbo].[Paciente](
+       [Pac_Cod] [int]  primary key,
+       [Pac_Nom] [varchar](50) NULL,
+       [Pac_App] [varchar](50) NULL,
+       [Pac_Apm] [varchar](50) NULL,
+       [Pac_DNI] [varchar](8) NULL,
+       [Pac_Sexo] [char](1) NULL,
+       [Pac_Fnac] [date] NULL,
+       [Pac_Tel] [varchar](50) NULL,
+       [Pac_Cel] [varchar](50) NULL,
+       [Pac_Dir] [varchar](50) NULL,
+       [Pac_Ema] [varchar](50) NULL,
+       [Loc_Cod] [int] foreign key references Locacion (Loc_Cod),
+       [Pac_Par] [int] NULL,
+       [Pac_Hab] [char](1) NULL
+) ON [PRIMARY]
+/****** Object:  Table [dbo].[Tratamiento]    Script Date: 26/04/2020 21:03:26 ******/
+CREATE TABLE [dbo].[Tratamiento](
+       [Tra_cod] [int] primary key,
+       [Tra_Des] [varchar](50) NULL
+) ON [PRIMARY]
+CREATE TABLE [dbo].[Parametro](
+       [Par_cod] [int] primary key,
+       [Pac_cod] [int] foreign key references Paciente (Pac_Cod),
+       [Par_Tant] [int] NULL,
+       [Par_Smed] [int] null,
+       [Par_EnvC] [int] null,
+       [Par_RMed] [int] null
+       ) ON [PRIMARY]
+CREATE TABLE [dbo].[Contacto](
+       [Con_Cod] [int] primary key,
+       [Pac_cod] [int] foreign key references Paciente (Pac_Cod),
+       [Con_Nom] [varchar](50) NULL,
+       [Con_App] [varchar](50) NULL,
+       [Con_Apm] [varchar](50) NULL,
+       [Con_DNI] [varchar](8) NULL,
+       [Con_Cel] [varchar](20) NULL,
+       [Con_Cor] [varchar](50) NULL,
+       ) ON [PRIMARY]
+
+CREATE TABLE [dbo].[Cita](
+	[Cit_Cod] [int] primary key,
+    [Pac_cod] [int] foreign key references Paciente (Pac_Cod),
+	[Tra_Cod] [int] foreign key references Tratamiento (Tra_Cod),
+	[Cit_Des] [varchar](50) NULL,
+	[Cit_Fec] date null,
+	[Cit_Post] [varchar](50) NULL
+	    ) ON [PRIMARY]
+
+CREATE TABLE [dbo].[Receta_Cab](
+	[Rec_Cod] [int] primary key,
+	[Cit_Cod] [int] foreign key references Cita (Cit_Cod),
+	[Rec_Fec] [date] NULL,
+	[Rec_Com] [varchar](100) NULL,
+	[Pac_cod] [int] foreign key references Paciente (Pac_Cod),
+	[Tra_Cod] [int] foreign key references Tratamiento (Tra_Cod),
+	[Doc_Cod] [int] foreign key references Doctor (Doc_Cod)
+	) ON [PRIMARY]
+
+
+CREATE TABLE [dbo].[Receta_Detalle](
+	[Rec_Cod] [int] foreign key references Receta_Cab (Rec_Cod),
+	[Rec_Lin] [int] primary key,
+	[Cit_Cod] [int] foreign key references Cita (Cit_Cod),
+	[Rec_Fec] [date] NULL,
+	[Rec_Com] [varchar](100) NULL,
+	[Med_Cod] [varchar](20) foreign key references Medicamento (Med_Cod)
+	) ON [PRIMARY]
+
+
