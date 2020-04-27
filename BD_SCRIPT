@@ -1,0 +1,263 @@
+USE [DSD_SALUD]
+GO
+/****** Object:  Table [dbo].[Cita]    Script Date: 26/04/2020 23:01:31 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[Cita](
+	[Cit_Cod] [int] NOT NULL,
+	[Pac_Cod] [int] NULL,
+	[Tra_Cod] [int] NULL,
+	[Cit_Des] [varchar](50) NULL,
+	[Cit_Fec] [varchar](50) NULL,
+	[Con_DNI] [varchar](8) NULL,
+	[Cit_Post] [varchar](50) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Cit_Cod] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[Contacto]    Script Date: 26/04/2020 23:01:31 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[Contacto](
+	[Con_Cod] [int] NOT NULL,
+	[Pac_cod] [int] NULL,
+	[Con_Nom] [varchar](50) NULL,
+	[Con_App] [varchar](50) NULL,
+	[Con_Apm] [varchar](50) NULL,
+	[Con_DNI] [varchar](8) NULL,
+	[Con_Cel] [varchar](20) NULL,
+	[Con_Cor] [varchar](50) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Con_Cod] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[Doctor]    Script Date: 26/04/2020 23:01:31 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[Doctor](
+	[Doc_cod] [int] NOT NULL,
+	[Doc_Nom] [varchar](50) NULL,
+	[Doc_Esp] [varchar](50) NULL,
+	[Doc_CM] [varchar](50) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Doc_cod] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[Locacion]    Script Date: 26/04/2020 23:01:31 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[Locacion](
+	[Loc_Cod] [int] NOT NULL,
+	[Loc_Des] [varchar](50) NULL,
+	[Loc_Dir] [varchar](50) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Loc_Cod] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[Medicamento]    Script Date: 26/04/2020 23:01:31 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[Medicamento](
+	[Med_Cod] [varchar](20) NOT NULL,
+	[Med_Nom] [varchar](50) NULL,
+	[Med_Lab] [varchar](50) NULL,
+	[Med_Fab] [varchar](50) NULL,
+	[Med_Ffab] [varchar](50) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Med_Cod] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[Paciente]    Script Date: 26/04/2020 23:01:31 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[Paciente](
+	[Pac_Cod] [int] NOT NULL,
+	[Pac_Nom] [varchar](50) NULL,
+	[Pac_App] [varchar](50) NULL,
+	[Pac_Apm] [varchar](50) NULL,
+	[Pac_DNI] [varchar](8) NULL,
+	[Pac_Sexo] [char](1) NULL,
+	[Pac_Fnac] [date] NULL,
+	[Pac_Tel] [varchar](50) NULL,
+	[Pac_Cel] [varchar](50) NULL,
+	[Pac_Dir] [varchar](50) NULL,
+	[Pac_Ema] [varchar](50) NULL,
+	[Loc_Cod] [int] NULL,
+	[Pac_Par] [int] NULL,
+	[Pac_Hab] [char](1) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Pac_Cod] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[Parametro]    Script Date: 26/04/2020 23:01:31 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Parametro](
+	[Par_cod] [int] NOT NULL,
+	[Pac_cod] [int] NULL,
+	[Par_Tant] [int] NULL,
+	[Par_Smed] [int] NULL,
+	[Par_EnvC] [int] NULL,
+	[Par_RMed] [int] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Par_cod] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+/****** Object:  Table [dbo].[Receta_Cab]    Script Date: 26/04/2020 23:01:31 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[Receta_Cab](
+	[Rec_Cod] [int] NOT NULL,
+	[Cit_Cod] [int] NULL,
+	[Rec_Fec] [date] NULL,
+	[Rec_Com] [varchar](100) NULL,
+	[Pac_Cod] [int] NULL,
+	[Tra_Cod] [int] NULL,
+	[Doc_Cod] [int] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Rec_Cod] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[Receta_Detalle]    Script Date: 26/04/2020 23:01:31 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[Receta_Detalle](
+	[Rec_Cod] [int] NOT NULL,
+	[Rec_Lin] [int] NOT NULL,
+	[Cit_Cod] [int] NULL,
+	[Rec_Fec] [date] NULL,
+	[Rec_Com] [varchar](100) NULL,
+	[Med_Cod] [varchar](20) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Rec_Cod] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[Tratamiento]    Script Date: 26/04/2020 23:01:31 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[Tratamiento](
+	[Tra_cod] [int] NOT NULL,
+	[Tra_Des] [varchar](50) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Tra_cod] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_PADDING OFF
+GO
+ALTER TABLE [dbo].[Cita]  WITH CHECK ADD FOREIGN KEY([Pac_Cod])
+REFERENCES [dbo].[Paciente] ([Pac_Cod])
+GO
+ALTER TABLE [dbo].[Cita]  WITH CHECK ADD FOREIGN KEY([Tra_Cod])
+REFERENCES [dbo].[Tratamiento] ([Tra_cod])
+GO
+ALTER TABLE [dbo].[Contacto]  WITH CHECK ADD FOREIGN KEY([Pac_cod])
+REFERENCES [dbo].[Paciente] ([Pac_Cod])
+GO
+ALTER TABLE [dbo].[Paciente]  WITH CHECK ADD FOREIGN KEY([Loc_Cod])
+REFERENCES [dbo].[Locacion] ([Loc_Cod])
+GO
+ALTER TABLE [dbo].[Parametro]  WITH CHECK ADD FOREIGN KEY([Pac_cod])
+REFERENCES [dbo].[Paciente] ([Pac_Cod])
+GO
+ALTER TABLE [dbo].[Receta_Cab]  WITH CHECK ADD FOREIGN KEY([Cit_Cod])
+REFERENCES [dbo].[Cita] ([Cit_Cod])
+GO
+ALTER TABLE [dbo].[Receta_Cab]  WITH CHECK ADD FOREIGN KEY([Doc_Cod])
+REFERENCES [dbo].[Doctor] ([Doc_cod])
+GO
+ALTER TABLE [dbo].[Receta_Cab]  WITH CHECK ADD FOREIGN KEY([Pac_Cod])
+REFERENCES [dbo].[Paciente] ([Pac_Cod])
+GO
+ALTER TABLE [dbo].[Receta_Cab]  WITH CHECK ADD FOREIGN KEY([Tra_Cod])
+REFERENCES [dbo].[Tratamiento] ([Tra_cod])
+GO
+ALTER TABLE [dbo].[Receta_Detalle]  WITH CHECK ADD FOREIGN KEY([Cit_Cod])
+REFERENCES [dbo].[Cita] ([Cit_Cod])
+GO
+ALTER TABLE [dbo].[Receta_Detalle]  WITH CHECK ADD FOREIGN KEY([Med_Cod])
+REFERENCES [dbo].[Medicamento] ([Med_Cod])
+GO
