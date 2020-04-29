@@ -1,0 +1,471 @@
+USE [master]
+GO
+/****** Object:  Database [DSD_SALUD]    Script Date: 29/04/2020 03:28:23 ******/
+CREATE DATABASE [DSD_SALUD]
+ CONTAINMENT = NONE
+ ON  PRIMARY 
+( NAME = N'DSD_SALUD', FILENAME = N'D:\rdsdbdata\DATA\DSD_SALUD.mdf' , SIZE = 3136KB , MAXSIZE = UNLIMITED, FILEGROWTH = 1024KB )
+ LOG ON 
+( NAME = N'DSD_SALUD_log', FILENAME = N'D:\rdsdbdata\DATA\DSD_SALUD_log.ldf' , SIZE = 784KB , MAXSIZE = 2048GB , FILEGROWTH = 10%)
+GO
+ALTER DATABASE [DSD_SALUD] SET COMPATIBILITY_LEVEL = 110
+GO
+IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
+begin
+EXEC [DSD_SALUD].[dbo].[sp_fulltext_database] @action = 'enable'
+end
+GO
+ALTER DATABASE [DSD_SALUD] SET ANSI_NULL_DEFAULT OFF 
+GO
+ALTER DATABASE [DSD_SALUD] SET ANSI_NULLS OFF 
+GO
+ALTER DATABASE [DSD_SALUD] SET ANSI_PADDING OFF 
+GO
+ALTER DATABASE [DSD_SALUD] SET ANSI_WARNINGS OFF 
+GO
+ALTER DATABASE [DSD_SALUD] SET ARITHABORT OFF 
+GO
+ALTER DATABASE [DSD_SALUD] SET AUTO_CLOSE OFF 
+GO
+ALTER DATABASE [DSD_SALUD] SET AUTO_CREATE_STATISTICS ON 
+GO
+ALTER DATABASE [DSD_SALUD] SET AUTO_SHRINK OFF 
+GO
+ALTER DATABASE [DSD_SALUD] SET AUTO_UPDATE_STATISTICS ON 
+GO
+ALTER DATABASE [DSD_SALUD] SET CURSOR_CLOSE_ON_COMMIT OFF 
+GO
+ALTER DATABASE [DSD_SALUD] SET CURSOR_DEFAULT  GLOBAL 
+GO
+ALTER DATABASE [DSD_SALUD] SET CONCAT_NULL_YIELDS_NULL OFF 
+GO
+ALTER DATABASE [DSD_SALUD] SET NUMERIC_ROUNDABORT OFF 
+GO
+ALTER DATABASE [DSD_SALUD] SET QUOTED_IDENTIFIER OFF 
+GO
+ALTER DATABASE [DSD_SALUD] SET RECURSIVE_TRIGGERS OFF 
+GO
+ALTER DATABASE [DSD_SALUD] SET  ENABLE_BROKER 
+GO
+ALTER DATABASE [DSD_SALUD] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
+GO
+ALTER DATABASE [DSD_SALUD] SET DATE_CORRELATION_OPTIMIZATION OFF 
+GO
+ALTER DATABASE [DSD_SALUD] SET TRUSTWORTHY OFF 
+GO
+ALTER DATABASE [DSD_SALUD] SET ALLOW_SNAPSHOT_ISOLATION OFF 
+GO
+ALTER DATABASE [DSD_SALUD] SET PARAMETERIZATION SIMPLE 
+GO
+ALTER DATABASE [DSD_SALUD] SET READ_COMMITTED_SNAPSHOT OFF 
+GO
+ALTER DATABASE [DSD_SALUD] SET HONOR_BROKER_PRIORITY OFF 
+GO
+ALTER DATABASE [DSD_SALUD] SET RECOVERY FULL 
+GO
+ALTER DATABASE [DSD_SALUD] SET  MULTI_USER 
+GO
+ALTER DATABASE [DSD_SALUD] SET PAGE_VERIFY CHECKSUM  
+GO
+ALTER DATABASE [DSD_SALUD] SET DB_CHAINING OFF 
+GO
+ALTER DATABASE [DSD_SALUD] SET FILESTREAM( NON_TRANSACTED_ACCESS = OFF ) 
+GO
+ALTER DATABASE [DSD_SALUD] SET TARGET_RECOVERY_TIME = 0 SECONDS 
+GO
+USE [DSD_SALUD]
+GO
+/****** Object:  User [admin]    Script Date: 29/04/2020 03:28:26 ******/
+CREATE USER [admin] FOR LOGIN [admin] WITH DEFAULT_SCHEMA=[dbo]
+GO
+ALTER ROLE [db_owner] ADD MEMBER [admin]
+GO
+/****** Object:  StoredProcedure [dbo].[RECETA_DETALLE_PACIENTE]    Script Date: 29/04/2020 03:28:27 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[RECETA_DETALLE_PACIENTE]
+    @pac_dni nvarchar(8)   
+
+AS   
+
+Select 
+t0.rec_cod,
+t0.Cit_cod,
+CONVERT(varchar, t0.Rec_fec,103) as Rec_fec,
+isnull(t0.pac_cod,'') as pac_cod,
+isnull(t2.pac_dni,'') as pac_dni,
+ isnull(t2.Pac_app+' '+t2.Pac_apm +' , '+t2.Pac_nom,'N-A' ) as pac_nombres,
+
+isnull(t1.med_cod,'') as med_cod,
+isnull(t3.Med_Nom,'') as Med_Nom,
+isnull(t1.Rec_Dos,'') as Rec_Dos,
+isnull(t1.Rec_Frec,'') as Rec_Frec,
+isnull(CONVERT(varchar, t1.Rec_FECI,103),'') as Rec_FECI,
+isnull(CONVERT(varchar,t1.REC_FEFI,103),'') as REC_FEFI,
+isnull(t1.REC_DET,'')  as REC_DET
+from [dbo].[Receta_Cab] T0
+ inner join [dbo].[Receta_Detalle] T1 ON T0.Rec_Cod=T1.Rec_Cod
+ inner join [dbo].[Paciente] T2 ON t2.Pac_cod=t0.Pac_Cod
+  inner join [dbo].[Medicamento] t3 on t3.Med_Cod=t1.Med_Cod
+
+    WHERE t2.pac_dni = @pac_dni  
+   
+
+GO
+/****** Object:  Table [dbo].[Cita]    Script Date: 29/04/2020 03:28:27 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[Cita](
+	[Cit_Cod] [int] NOT NULL,
+	[Pac_cod] [int] NULL,
+	[Tra_Cod] [int] NULL,
+	[Cit_Des] [varchar](50) NULL,
+	[Cit_Fec] [date] NULL,
+	[Cit_Post] [varchar](50) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Cit_Cod] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[Contacto]    Script Date: 29/04/2020 03:28:27 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[Contacto](
+	[Con_Cod] [int] NOT NULL,
+	[Pac_cod] [int] NULL,
+	[Con_Nom] [varchar](50) NULL,
+	[Con_App] [varchar](50) NULL,
+	[Con_Apm] [varchar](50) NULL,
+	[Con_DNI] [varchar](8) NULL,
+	[Con_Cel] [varchar](20) NULL,
+	[Con_Cor] [varchar](50) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Con_Cod] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[Doctor]    Script Date: 29/04/2020 03:28:27 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[Doctor](
+	[Doc_cod] [int] NOT NULL,
+	[Doc_Nom] [varchar](50) NULL,
+	[Doc_Esp] [varchar](50) NULL,
+	[Doc_CM] [varchar](50) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Doc_cod] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[Locacion]    Script Date: 29/04/2020 03:28:27 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[Locacion](
+	[Loc_Cod] [int] NOT NULL,
+	[Loc_Des] [varchar](50) NULL,
+	[Loc_Dir] [varchar](50) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Loc_Cod] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[Medicamento]    Script Date: 29/04/2020 03:28:27 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[Medicamento](
+	[Med_Cod] [varchar](20) NOT NULL,
+	[Med_Nom] [varchar](50) NULL,
+	[Med_Lab] [varchar](50) NULL,
+	[Med_Fab] [varchar](50) NULL,
+	[Med_Ffab] [varchar](50) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Med_Cod] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[Paciente]    Script Date: 29/04/2020 03:28:27 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[Paciente](
+	[Pac_Cod] [int] NOT NULL,
+	[Pac_Nom] [varchar](50) NULL,
+	[Pac_App] [varchar](50) NULL,
+	[Pac_Apm] [varchar](50) NULL,
+	[Pac_DNI] [varchar](8) NULL,
+	[Pac_Sexo] [char](1) NULL,
+	[Pac_Fnac] [date] NULL,
+	[Pac_Tel] [varchar](50) NULL,
+	[Pac_Cel] [varchar](50) NULL,
+	[Pac_Dir] [varchar](50) NULL,
+	[Pac_Ema] [varchar](50) NULL,
+	[Loc_Cod] [int] NULL,
+	[Pac_Par] [int] NULL,
+	[Pac_Hab] [char](1) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Pac_Cod] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[Parametro]    Script Date: 29/04/2020 03:28:27 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[Parametro](
+	[Par_cod] [int] NOT NULL,
+	[Pac_cod] [int] NULL,
+	[Par_Tant] [int] NULL,
+	[Par_Smed] [int] NULL,
+	[Par_EnvC] [int] NULL,
+	[Par_RMed] [int] NULL,
+	[Pac_DNI] [varchar](8) NULL,
+	[Par_Ccel] [varchar](50) NULL,
+	[Par_delc] [int] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Par_cod] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[Receta_Cab]    Script Date: 29/04/2020 03:28:27 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[Receta_Cab](
+	[Rec_Cod] [int] NOT NULL,
+	[Cit_Cod] [int] NULL,
+	[Rec_Fec] [date] NULL,
+	[Rec_Com] [varchar](100) NULL,
+	[Pac_cod] [int] NULL,
+	[Tra_Cod] [int] NULL,
+	[Doc_Cod] [int] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Rec_Cod] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[Receta_Detalle]    Script Date: 29/04/2020 03:28:27 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[Receta_Detalle](
+	[Rec_Cod] [int] NULL,
+	[Rec_Lin] [int] NOT NULL,
+	[Cit_Cod] [int] NULL,
+	[Rec_Dos] [int] NULL,
+	[Rec_Frec] [varchar](20) NULL,
+	[Rec_Feci] [date] NULL,
+	[Rec_Fefi] [date] NULL,
+	[Med_Cod] [varchar](20) NULL,
+	[Rec_det] [varchar](100) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Rec_Lin] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[Tratamiento]    Script Date: 29/04/2020 03:28:27 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[Tratamiento](
+	[Tra_cod] [int] NOT NULL,
+	[Tra_Des] [varchar](50) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Tra_cod] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_PADDING OFF
+GO
+INSERT [dbo].[Cita] ([Cit_Cod], [Pac_cod], [Tra_Cod], [Cit_Des], [Cit_Fec], [Cit_Post]) VALUES (1, 1, 1, N'Cita Evaluación', CAST(0x08410B00 AS Date), N'0')
+GO
+INSERT [dbo].[Cita] ([Cit_Cod], [Pac_cod], [Tra_Cod], [Cit_Des], [Cit_Fec], [Cit_Post]) VALUES (2, 1, 1, N'Cita Seguimiento', CAST(0x0A410B00 AS Date), N'0')
+GO
+INSERT [dbo].[Cita] ([Cit_Cod], [Pac_cod], [Tra_Cod], [Cit_Des], [Cit_Fec], [Cit_Post]) VALUES (3, 1, 1, N'Cita Postergada', CAST(0x0A410B00 AS Date), N'1')
+GO
+INSERT [dbo].[Cita] ([Cit_Cod], [Pac_cod], [Tra_Cod], [Cit_Des], [Cit_Fec], [Cit_Post]) VALUES (4, 2, 3, N'Cita Evaluación', CAST(0x08410B00 AS Date), N'0')
+GO
+INSERT [dbo].[Cita] ([Cit_Cod], [Pac_cod], [Tra_Cod], [Cit_Des], [Cit_Fec], [Cit_Post]) VALUES (5, 2, 1, N'Cita Evualuación', CAST(0x0A410B00 AS Date), N'0')
+GO
+INSERT [dbo].[Contacto] ([Con_Cod], [Pac_cod], [Con_Nom], [Con_App], [Con_Apm], [Con_DNI], [Con_Cel], [Con_Cor]) VALUES (1, 1, N'Pilar', N'Mercado', N'Crovetto', N'12345678', N'965449390', N'c.benavides91@gmail.com')
+GO
+INSERT [dbo].[Contacto] ([Con_Cod], [Pac_cod], [Con_Nom], [Con_App], [Con_Apm], [Con_DNI], [Con_Cel], [Con_Cor]) VALUES (2, 2, N'Kathy', N'Meza', N'Meza', N'12345678', N'765432333', N'kath@gmail.com')
+GO
+INSERT [dbo].[Doctor] ([Doc_cod], [Doc_Nom], [Doc_Esp], [Doc_CM]) VALUES (1, N'Julio Ramón Solis', N'Medicina General', N'12334')
+GO
+INSERT [dbo].[Doctor] ([Doc_cod], [Doc_Nom], [Doc_Esp], [Doc_CM]) VALUES (2, N'Maria Antonieta Mendez', N'Medicina General', N'23452')
+GO
+INSERT [dbo].[Doctor] ([Doc_cod], [Doc_Nom], [Doc_Esp], [Doc_CM]) VALUES (3, N'Ester Mercado Crovetto', N'Traumatologia', N'12344')
+GO
+INSERT [dbo].[Doctor] ([Doc_cod], [Doc_Nom], [Doc_Esp], [Doc_CM]) VALUES (4, N'Blanca Esposito Sanchez', N'Cirugia', N'43211')
+GO
+INSERT [dbo].[Doctor] ([Doc_cod], [Doc_Nom], [Doc_Esp], [Doc_CM]) VALUES (5, N'Claudia Lucia Tejada', N'Cardiologia', N'44444')
+GO
+INSERT [dbo].[Locacion] ([Loc_Cod], [Loc_Des], [Loc_Dir]) VALUES (1, N'Hospital Mongrut', N'Calle las leyendas 686')
+GO
+INSERT [dbo].[Locacion] ([Loc_Cod], [Loc_Des], [Loc_Dir]) VALUES (2, N'Hospital Rebagliati', N' Av Edgardo Rebagliati 490, Jesús María 15072')
+GO
+INSERT [dbo].[Medicamento] ([Med_Cod], [Med_Nom], [Med_Lab], [Med_Fab], [Med_Ffab]) VALUES (N'1001000001', N'DAYAMINERAL X 240 ML', N'FIN', N'FARMINDUSTRIA', N'CAPSULA')
+GO
+INSERT [dbo].[Medicamento] ([Med_Cod], [Med_Nom], [Med_Lab], [Med_Fab], [Med_Ffab]) VALUES (N'1001000506', N'LAFI-TIL 7 SPRAY X 30 ML', N'FIN_OTC', N'ABBOTT', N'CAPSULA')
+GO
+INSERT [dbo].[Medicamento] ([Med_Cod], [Med_Nom], [Med_Lab], [Med_Fab], [Med_Ffab]) VALUES (N'1001000562', N'DIXI 35 X 21 COMP', N'FIN', N'ABBOTT', N'CAPSULA')
+GO
+INSERT [dbo].[Medicamento] ([Med_Cod], [Med_Nom], [Med_Lab], [Med_Fab], [Med_Ffab]) VALUES (N'1071001107', N'DOLOCORDRALAN EXTRA FORTE X 50 TAB', N'-', N'ANSOLAT', N'TABLETA')
+GO
+INSERT [dbo].[Medicamento] ([Med_Cod], [Med_Nom], [Med_Lab], [Med_Fab], [Med_Ffab]) VALUES (N'1661001210', N'PANADOL GOTAS X 15 ML', N'GSK', N'GLASO_OTC', N'GOTAS')
+GO
+INSERT [dbo].[Medicamento] ([Med_Cod], [Med_Nom], [Med_Lab], [Med_Fab], [Med_Ffab]) VALUES (N'2012101703', N'ANDREWS ANTIACIDO CEREZA 200ML', N'MEDIFARMA', N'MEDIFARMA', N'SOBRE')
+GO
+INSERT [dbo].[Medicamento] ([Med_Cod], [Med_Nom], [Med_Lab], [Med_Fab], [Med_Ffab]) VALUES (N'2492102033', N'VICK VAPORUB POTE 100 GRS', N'TEVA', N'PROCTER', N'POMADA')
+GO
+INSERT [dbo].[Paciente] ([Pac_Cod], [Pac_Nom], [Pac_App], [Pac_Apm], [Pac_DNI], [Pac_Sexo], [Pac_Fnac], [Pac_Tel], [Pac_Cel], [Pac_Dir], [Pac_Ema], [Loc_Cod], [Pac_Par], [Pac_Hab]) VALUES (1, N'Carla', N'Benavides', N'Salas', N'47273197', N'F', CAST(0x34180B00 AS Date), N'4512098', N'998996676', N'-', N'cbenavides@outlook.com', 1, 1, N'1')
+GO
+INSERT [dbo].[Paciente] ([Pac_Cod], [Pac_Nom], [Pac_App], [Pac_Apm], [Pac_DNI], [Pac_Sexo], [Pac_Fnac], [Pac_Tel], [Pac_Cel], [Pac_Dir], [Pac_Ema], [Loc_Cod], [Pac_Par], [Pac_Hab]) VALUES (2, N'Leonardo', N'La Madrid', N'ND', N'76543333', N'M', CAST(0xC3150B00 AS Date), N'6543212', N'942886011', N'Av. Jasminez', N'leolazlmb@gmail.com', 1, 1, N'1')
+GO
+INSERT [dbo].[Paciente] ([Pac_Cod], [Pac_Nom], [Pac_App], [Pac_Apm], [Pac_DNI], [Pac_Sexo], [Pac_Fnac], [Pac_Tel], [Pac_Cel], [Pac_Dir], [Pac_Ema], [Loc_Cod], [Pac_Par], [Pac_Hab]) VALUES (5, N'Pedro', N'Llerena', N'Gomez', N'44251748', N'M', CAST(0x07140B00 AS Date), N'5314816', N'994488186', N'Avenida Siempre Viva 742', N'pllere56na@gmail.com', 1, 1, N'1')
+GO
+INSERT [dbo].[Parametro] ([Par_cod], [Pac_cod], [Par_Tant], [Par_Smed], [Par_EnvC], [Par_RMed], [Pac_DNI], [Par_Ccel], [Par_delc]) VALUES (1, 1, 1, 1, 1, 1, NULL, NULL, NULL)
+GO
+INSERT [dbo].[Parametro] ([Par_cod], [Pac_cod], [Par_Tant], [Par_Smed], [Par_EnvC], [Par_RMed], [Pac_DNI], [Par_Ccel], [Par_delc]) VALUES (2, 2, 1, 1, 0, 0, NULL, NULL, NULL)
+GO
+INSERT [dbo].[Receta_Cab] ([Rec_Cod], [Cit_Cod], [Rec_Fec], [Rec_Com], [Pac_cod], [Tra_Cod], [Doc_Cod]) VALUES (1, 1, CAST(0x0A410B00 AS Date), N'Seguimiento tratamiento ', 1, 1, 1)
+GO
+INSERT [dbo].[Receta_Cab] ([Rec_Cod], [Cit_Cod], [Rec_Fec], [Rec_Com], [Pac_cod], [Tra_Cod], [Doc_Cod]) VALUES (2, 2, CAST(0x0A410B00 AS Date), N'Receta tratamiento', 1, 1, 1)
+GO
+INSERT [dbo].[Receta_Detalle] ([Rec_Cod], [Rec_Lin], [Cit_Cod], [Rec_Dos], [Rec_Frec], [Rec_Feci], [Rec_Fefi], [Med_Cod], [Rec_det]) VALUES (1, 1, 1, 2, N'Diaria', CAST(0x0A410B00 AS Date), CAST(0x0D410B00 AS Date), N'1661001210', N'Solo 2 Gotas cada aplicación')
+GO
+INSERT [dbo].[Receta_Detalle] ([Rec_Cod], [Rec_Lin], [Cit_Cod], [Rec_Dos], [Rec_Frec], [Rec_Feci], [Rec_Fefi], [Med_Cod], [Rec_det]) VALUES (1, 2, 1, 1, N'Diaria', CAST(0x0A410B00 AS Date), CAST(0x0D410B00 AS Date), N'2492102033', NULL)
+GO
+INSERT [dbo].[Tratamiento] ([Tra_cod], [Tra_Des]) VALUES (1, N'Cirugia Vascular')
+GO
+INSERT [dbo].[Tratamiento] ([Tra_cod], [Tra_Des]) VALUES (2, N'Trombosis')
+GO
+INSERT [dbo].[Tratamiento] ([Tra_cod], [Tra_Des]) VALUES (3, N'Gastritis')
+GO
+INSERT [dbo].[Tratamiento] ([Tra_cod], [Tra_Des]) VALUES (4, N'Radioterapia')
+GO
+INSERT [dbo].[Tratamiento] ([Tra_cod], [Tra_Des]) VALUES (5, N'Quimioterapia')
+GO
+INSERT [dbo].[Tratamiento] ([Tra_cod], [Tra_Des]) VALUES (6, N'Terapia Hormonal')
+GO
+INSERT [dbo].[Tratamiento] ([Tra_cod], [Tra_Des]) VALUES (7, N'Apendicectomía')
+GO
+INSERT [dbo].[Tratamiento] ([Tra_cod], [Tra_Des]) VALUES (8, N'Balon Intragastrico')
+GO
+INSERT [dbo].[Tratamiento] ([Tra_cod], [Tra_Des]) VALUES (9, N'Cirugia de cataratas')
+GO
+ALTER TABLE [dbo].[Cita]  WITH CHECK ADD FOREIGN KEY([Pac_cod])
+REFERENCES [dbo].[Paciente] ([Pac_Cod])
+GO
+ALTER TABLE [dbo].[Cita]  WITH CHECK ADD FOREIGN KEY([Tra_Cod])
+REFERENCES [dbo].[Tratamiento] ([Tra_cod])
+GO
+ALTER TABLE [dbo].[Contacto]  WITH CHECK ADD FOREIGN KEY([Pac_cod])
+REFERENCES [dbo].[Paciente] ([Pac_Cod])
+GO
+ALTER TABLE [dbo].[Paciente]  WITH CHECK ADD FOREIGN KEY([Loc_Cod])
+REFERENCES [dbo].[Locacion] ([Loc_Cod])
+GO
+ALTER TABLE [dbo].[Parametro]  WITH CHECK ADD FOREIGN KEY([Pac_cod])
+REFERENCES [dbo].[Paciente] ([Pac_Cod])
+GO
+ALTER TABLE [dbo].[Receta_Cab]  WITH CHECK ADD FOREIGN KEY([Cit_Cod])
+REFERENCES [dbo].[Cita] ([Cit_Cod])
+GO
+ALTER TABLE [dbo].[Receta_Cab]  WITH CHECK ADD FOREIGN KEY([Doc_Cod])
+REFERENCES [dbo].[Doctor] ([Doc_cod])
+GO
+ALTER TABLE [dbo].[Receta_Cab]  WITH CHECK ADD FOREIGN KEY([Pac_cod])
+REFERENCES [dbo].[Paciente] ([Pac_Cod])
+GO
+ALTER TABLE [dbo].[Receta_Cab]  WITH CHECK ADD FOREIGN KEY([Tra_Cod])
+REFERENCES [dbo].[Tratamiento] ([Tra_cod])
+GO
+ALTER TABLE [dbo].[Receta_Detalle]  WITH CHECK ADD FOREIGN KEY([Cit_Cod])
+REFERENCES [dbo].[Cita] ([Cit_Cod])
+GO
+ALTER TABLE [dbo].[Receta_Detalle]  WITH CHECK ADD FOREIGN KEY([Med_Cod])
+REFERENCES [dbo].[Medicamento] ([Med_Cod])
+GO
+ALTER TABLE [dbo].[Receta_Detalle]  WITH CHECK ADD FOREIGN KEY([Rec_Cod])
+REFERENCES [dbo].[Receta_Cab] ([Rec_Cod])
+GO
+USE [master]
+GO
+ALTER DATABASE [DSD_SALUD] SET  READ_WRITE 
+GO
