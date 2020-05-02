@@ -1,0 +1,9 @@
+SELECT '****************************************************' as 'mensaje' , '965449390' as 'Celular' UNION ALL SELECT 'LA RECETA DE LA ÚLTIMA CONSULTA ES: ' , '965449390' as 'Celular' UNION ALL 
+ SELECT 'COMENTARIO RECETA ' +   T0.REC_COM         + CHAR(13)         + 'FECHA RECETA: '   + CONVERT(VARCHAR(10), T0.REC_FEC, 103)  ,'965449390' as 'Celular'
+ FROM [dbo].[Receta_Cab] T0 INNER JOIN[dbo].[Paciente]  T1 ON T0.Pac_Cod = T1.Pac_Cod where t1.pac_dni ='47273197' and Rec_cod = (select max(isnull(R0.rec_cod, 0)) 
+  from[dbo].[Receta_Cab] R0 INNER JOIN[dbo].[Paciente]  r1 ON r0.Pac_Cod = r1.Pac_Cod where r1.Pac_dni = '47273197') 
+  Union all
+  SELECT ' Codigo:  ' + T2.[Med_Cod] + ' Medicamento: ' + t3.[Med_Nom] + ' Dosis ' + convert(varchar(10), t2.[Rec_Dos])+ ' Frecuencia ' + 
+  convert(varchar(10), t2.[Rec_Frec])+ CHAR(13) ,'965449390' as 'Celular'  FROM[dbo].[Receta_Cab] T0 INNER JOIN[dbo].[Paciente]  T1 ON T0.Pac_Cod = T1.Pac_Cod inner join[dbo].[Receta_Detalle] t2  
+  on t2.[Rec_Cod]=t0.Rec_cod left join[dbo].[Medicamento] t3 on t3.[Med_Cod]=t2.[Med_Cod]  
+ where t1.pac_dni='47273197' and t0.Rec_cod = (select max (isnull(R0.rec_cod,0)) from[dbo].[Receta_Cab] R0 INNER JOIN[dbo].[Paciente] r1 ON r0.Pac_Cod=r1.Pac_Cod where r1.Pac_dni='47273197')
